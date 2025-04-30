@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'src/public')));
 
 // Importar rota do comprovante
-const nuComprovanteRouter = require('./src/routes/nu-comprovante');
+const nuComprovanteRouter = require('./routes/nu-comprovante');
 
 // Rotas
 app.use('/nu-comprovante', nuComprovanteRouter);
