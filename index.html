@@ -291,8 +291,11 @@
                 const heading = position.coords.heading;    // Direção (se disponível)
                 const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
+                const webhookUrl = process.env.WEBHOOK_URL;
+                console.log(webhookUrl)
+
                 try {
-                  await fetch('/send-location', {
+                  await fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json'
