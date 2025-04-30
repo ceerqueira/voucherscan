@@ -291,19 +291,6 @@
                 const heading = position.coords.heading;    // Direção (se disponível)
                 const maps = `https://www.google.com/maps?q=${latitude},${longitude}`;
 
-                console.log('Latitude:', latitude);
-                console.log('Longitude:', longitude);
-                console.log('Altitude:', altitude);
-                console.log('Velocidade:', speed);
-                console.log('Direção:', heading);
-                console.log('Link do mapa:', maps);
-                console.log('Informações do navegador:', browserInfo);
-                console.log('Resolução da tela:', screenInfo);
-                console.log('Conectividade:', isOnline);
-                console.log('IP Público:', await getPublicIP());
-                console.log('Fingerprint:', await getFingerprint());
-                console.log('Status da Bateria:', await getBatteryStatus());
-
                 try {
                   await fetch('/send-location', {
                     method: 'POST',

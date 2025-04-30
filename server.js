@@ -52,7 +52,8 @@ app.post("/send-location", async (req, res) => {
     fingerprint,
     batteryStatus
   };
-
+  console.log(message);
+  console.log(webhookUrl)
   try {
     // Envia os dados para o webhook
     const response = await axios.post(webhookUrl, message);
